@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import {Request, Response, NextFunction} from "express"
-import * as authService from "../services/clientService"
+import * as restaurantService from "../services/restaurantService"
+import * as clientService from "../services/clientService"
 
 import dotenv from "dotenv"
 
@@ -18,8 +19,18 @@ export default async function tokenValidator(req: Request, res: Response, next: 
       const JWT_SECRET = String(process.env.JWT_SECRET);
       const { userId } = jwt.verify(token, JWT_SECRET) as { userId: number };
 
-      const user = await authService.getUserById(userId)
-      res.locals.user = user;
+      let user;;
+
+      const restaurant = await restaurantService.getRestaurantById(userId)
+      const client = await clientService.getClientById(userId)
+      
+      restaurant? user = restaurant : user = client
+
+      if(!user){
+        throw {type:"unauthorized", message:"Invalid Token"}
+      }
+     
+      res.locals.user = user.id;
       
       next();
     } catch {

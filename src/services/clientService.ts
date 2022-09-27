@@ -6,7 +6,6 @@ import {ClientDataType} from "../types/clientType"
 
 dotenv.config()
 
-
 export async function getClientById(userId: number){
     const user = await clientRepository.getClientById(userId)
     return user

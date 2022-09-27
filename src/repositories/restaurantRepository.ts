@@ -11,6 +11,15 @@ export async function getRetaurantByEmail(email: string){
     return user
 }
 
+export async function getAllRestaurants(){
+    const restaurants = await prisma.restaurant.findMany({select:{name:true, city:true, states:{select:{name:true}}}})
+    return restaurants
+}
+
+export async function getRestauranteState(stateId: number){
+    const state = await prisma.state.findFirst({where:{id:stateId}})
+    return state
+}
 
 export async function insertRestaurant(userData: RestaurantDataType){
     return await prisma.restaurant.create({data: userData})

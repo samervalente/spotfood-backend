@@ -23,14 +23,16 @@ model Client {
 }
 
 model Restaurant {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
-  email        String   @unique
+  id           Int    @id @default(autoincrement())
+  name         String @unique
+  email        String @unique
   imageProfile String
   password     String
   city         String
-  stateId      String
-  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  stateId      Int
+
+  states    State    @relation(fields: [stateId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
 
   @@map("restaurants")
 }
@@ -44,13 +46,18 @@ model Adress {
 
   states    State    @relation(fields: [stateId], references: [id])
   createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("adresses")
 }
 
 model State {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  Adress    Adress[]
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  createdAt  DateTime     @default(now()) @db.Timestamptz(6)
+  Adress     Adress[]
+  Restaurant Restaurant[]
+
+  @@map("states")
 }
 
 model ProductType {

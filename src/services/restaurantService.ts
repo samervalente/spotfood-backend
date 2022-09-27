@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import * as restaurantRepository from "../repositories/restaurantRepository"
 import dotenv from "dotenv"
 import {RestaurantDataType} from "../types/restaurantType"
+import { notFoundError } from "../utils/errorUtils"
 
 dotenv.config()
 
@@ -17,7 +18,18 @@ export async function getRetaurantByEmail(email: string){
     return user
 }
 
+export async function getAllRestaurants(){
+    const restaurants = await restaurantRepository.getAllRestaurants()
+    return restaurants
+}
+
 export async function registerRestaurant(restaurantData: RestaurantDataType){
+    const state = await restaurantRepository.getRestauranteState(restaurantData.stateId)
+
+    if(!state){
+        throw notFoundError("State not found")
+    }
+
     const {password} = restaurantData
     restaurantData.password = bcrypt.hashSync(password, 10)
     
