@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id           Int    @id @default(autoincrement())
+  name         String
+  email        String @unique
+  cpf          String @unique
+  imageProfile String
+  password     String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  Cart      Cart[]
+  Order     Order[]
+
+  @@map("clients")
+}
+
+model Restaurant {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  email        String   @unique
+  imageProfile String
+  password     String
+  city         String
+  stateId      String
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("restaurants")
+}
+
+model Adress {
+  id         Int     @id @default(autoincrement())
+  stateId    Int
+  city       String
+  number     Int
+  complement String?
+
+  states    State    @relation(fields: [stateId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model State {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  Adress    Adress[]
+}
+
+model ProductType {
+  id   Int    @id @default(autoincrement())
+  type String @unique
+
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  Product   Product[]
+
+  @@map("productTypes")
+}
+
+model Product {
+  id       Int    @id @default(autoincrement())
+  name     String
+  price    Float
+  rate     Float?
+  imageUrl String
+  typeId   Int
+
+  types ProductType @relation(fields: [typeId], references: [id])
+
+  createdAt     DateTime        @default(now()) @db.Timestamptz(6)
+  CartProducts  CartProducts[]
+  OrderProducts OrderProducts[]
+
+  @@map("products")
+}
+
+model Cart {
+  id         Int   @id @default(autoincrement())
+  totalPrice Float
+  clientId   Int
+
+  clients Client @relation(fields: [clientId], references: [id])
+
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
+  CartProducts CartProducts[]
+
+  @@map("carts")
+}
+
+model CartProducts {
+  id        Int @id @default(autoincrement())
+  cartId    Int
+  productId Int
+
+  carts    Cart    @relation(fields: [cartId], references: [id])
+  products Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("cartProducts")
+}
+
+model Order {
+  id         Int   @id @default(autoincrement())
+  totalPrice Float
+  clientId   Int
+
+  clients Client @relation(fields: [clientId], references: [id])
+
+  createdAt     DateTime        @default(now()) @db.Timestamptz(6)
+  OrderProducts OrderProducts[]
+
+  @@map("orders")
+}
+
+model OrderProducts {
+  id        Int @id @default(autoincrement())
+  orderId   Int
+  productId Int
+
+  orders   Order   @relation(fields: [orderId], references: [id])
+  products Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("orderProducts")
+}
