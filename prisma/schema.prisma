@@ -31,8 +31,9 @@ model Restaurant {
   city         String
   stateId      Int
 
-  states    State    @relation(fields: [stateId], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  states    State     @relation(fields: [stateId], references: [id])
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  Product   Product[]
 
   @@map("restaurants")
 }
@@ -71,14 +72,17 @@ model ProductType {
 }
 
 model Product {
-  id       Int    @id @default(autoincrement())
-  name     String
-  price    Float
-  rate     Float?
-  imageUrl String
-  typeId   Int
+  id           Int     @id @default(autoincrement())
+  name         String
+  price        Float
+  rate         Float?
+  imageUrl     String
+  typeId       Int
+  restaurantId Int
+  description  String?
 
-  types ProductType @relation(fields: [typeId], references: [id])
+  types       ProductType @relation(fields: [typeId], references: [id])
+  restaurants Restaurant  @relation(fields: [restaurantId], references: [id])
 
   createdAt     DateTime        @default(now()) @db.Timestamptz(6)
   CartProducts  CartProducts[]

@@ -5,9 +5,16 @@ import bcrypt from "bcrypt"
 
 export async function validateRestaurantRegisterData(req: Request, res:Response, next:NextFunction){
     const restaurant = req.body
-    const restaurantOnDB = await restaurantService.getRetaurantByEmail(restaurant.email)
 
-    if(restaurantOnDB){
+    const restaurantWithSameName = await restaurantService.getRestaurantByName(restaurant.name)
+
+    if(restaurantWithSameName){
+        throw conflictError("Restaurant already registered with this name.")
+    }
+
+    const restaurantWithSameEmail = await restaurantService.getRestaurantByEmail(restaurant.email)
+
+    if(restaurantWithSameEmail){
         throw conflictError("Restaurant already registered with this email.")
     }
 
@@ -17,7 +24,7 @@ export async function validateRestaurantRegisterData(req: Request, res:Response,
 
 export async function validateRestaurantLoginData(req: Request, res:Response, next:NextFunction){
     const restaurant = req.body
-    const restaurantOnDB = await restaurantService.getRetaurantByEmail(restaurant.email)
+    const restaurantOnDB = await restaurantService.getRestaurantByEmail(restaurant.email)
 
     if(!restaurantOnDB){
         throw unauthorizedError("Email or password incorrect.")
@@ -27,6 +34,9 @@ export async function validateRestaurantLoginData(req: Request, res:Response, ne
     if(!isPasswordCorrect){
         throw unauthorizedError("Email or password incorrect.")
     }
+
+    console.log(restaurantOnDB)
+    res.locals.user = restaurantOnDB
 
     next()
 

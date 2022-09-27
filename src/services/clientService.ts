@@ -7,13 +7,13 @@ import {ClientDataType} from "../types/clientType"
 dotenv.config()
 
 export async function getClientById(userId: number){
-    const user = await clientRepository.getClientById(userId)
-    return user
+    const client = await clientRepository.getClientById(userId)
+    return client
 }
 
 export async function getClientByEmail(email: string){
-    const user = await clientRepository.getClientByEmail(email)
-    return user
+    const client = await clientRepository.getClientByEmail(email)
+    return client
 }
 
 export async function registerClient(clientData: ClientDataType){

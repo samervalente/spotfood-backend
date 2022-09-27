@@ -1,19 +1,32 @@
 import prisma from "../database/prisma"
+import connection from "../database/postgres"
 import {RestaurantDataType} from "../types/restaurantType"
 
-export async function getRestaurantById(id: number){
-    const user = await prisma.restaurant.findFirst({where: {id}})
-    return user
-}
-
-export async function getRetaurantByEmail(email: string){
-    const user = await prisma.restaurant.findFirst({where: {email}})
-    return user
+export async function insertRestaurant(userData: RestaurantDataType){
+    return await prisma.restaurant.create({data: userData})
 }
 
 export async function getAllRestaurants(){
-    const restaurants = await prisma.restaurant.findMany({select:{name:true, city:true, states:{select:{name:true}}}})
+    const restaurants = await prisma.restaurant.findMany({select:{name:true, city:true, states:{select:{name:true}}, Product:{select:{name:true, price:true, description:true}}}})
+
+    restaurants[0].Product.forEach(product => product.price = product.price/100)
+
     return restaurants
+}
+
+export async function getRestaurantById(id: number){
+    const restaurant = await prisma.restaurant.findFirst({where: {id}})
+    return restaurant
+}
+
+export async function getRestaurantByEmail(email: string){
+    const restaurant = await prisma.restaurant.findFirst({where: {email}})
+    return restaurant
+}
+
+export async function getRestaurantByName(name:string){
+    const restaurant = await prisma.restaurant.findFirst({where:{name}})
+    return restaurant
 }
 
 export async function getRestauranteState(stateId: number){
@@ -21,6 +34,12 @@ export async function getRestauranteState(stateId: number){
     return state
 }
 
-export async function insertRestaurant(userData: RestaurantDataType){
-    return await prisma.restaurant.create({data: userData})
+export async function filterRestaurants(state: string, city: string){
+    const {rows: restaurants} = await connection.query(`SELECT r.name, r.city, s.name FROM restaurants r
+    JOIN states s
+    ON s.id = r."stateId"
+    WHERE s.name = $1 AND r.city = $2
+    `,[state, city])
+
+    return restaurants
 }

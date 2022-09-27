@@ -18,22 +18,22 @@ export default async function tokenValidator(req: Request, res: Response, next: 
     try {
       const JWT_SECRET = String(process.env.JWT_SECRET);
       const { userId } = jwt.verify(token, JWT_SECRET) as { userId: number };
+      console.log(userId)
+      let user;
 
-      let user;;
-
-      const restaurant = await restaurantService.getRestaurantById(userId)
-      const client = await clientService.getClientById(userId)
+      const restaurant: any = await restaurantService.getRestaurantById(userId)
+      const client: any = await clientService.getClientById(userId)
       
-      restaurant? user = restaurant : user = client
-
-      if(!user){
-        throw {type:"unauthorized", message:"Invalid Token"}
+      if(!restaurant){
+        user = client
       }
-     
-      res.locals.user = user.id;
+      user = restaurant
+
+      res.locals.userId = user.id
       
       next();
-    } catch {
+    } catch(err) {
+      console.log(err)
       throw {type:"unauthorized", message:"Invalid Token"}
     }
 }

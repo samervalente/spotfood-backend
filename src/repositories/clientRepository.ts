@@ -2,13 +2,13 @@ import prisma from "../database/prisma"
 import {ClientDataType} from "../types/clientType"
 
 export async function getClientById(id: number){
-    const user = await prisma.client.findFirst({where: {id}})
-    return user
+    const client = await prisma.client.findFirst({where: {id}})
+    return client
 }
 
 export async function getClientByEmail(email: string){
-    const user = await prisma.client.findFirst({where: {email}})
-    return user
+    const client = await prisma.client.findFirst({where: {email}})
+    return client
 }
 
 

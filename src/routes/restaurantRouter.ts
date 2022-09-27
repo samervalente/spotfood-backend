@@ -4,7 +4,7 @@ import restaurantSchema from "../schemas/restaurantSchema";
 import authSchema from "../schemas/authSchema";
 import tokenValidator from "../middlewares/tokenValidatorMiddleware";
 import { validateRestaurantRegisterData, validateRestaurantLoginData } from "../middlewares/restaurantMiddleware";
-import { registerRestaurant, listRestaurants, loginRestaurant } from "../controllers/restaurantController";
+import { registerRestaurant, listRestaurants, loginRestaurant, getRestaurantById, filterRestaurants } from "../controllers/restaurantController";
 
 const routes = Router()
 
@@ -15,6 +15,6 @@ routes.post("/login/restaurants", schemaValidator(authSchema), validateRestauran
 
 routes.use(tokenValidator)
 routes.get("/restaurants", listRestaurants)
-routes.get("/restaurants/:id")
-
+//routes.get("/restaurants/:id", getRestaurantById)
+routes.get("/restaurants/filter", filterRestaurants)
 export default routes
