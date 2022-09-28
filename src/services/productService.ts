@@ -30,3 +30,7 @@ export async function addProductToCart(productId: number, amount:number, clientI
 export async function removeProductFromCart(productId: number, clientId: number){
     await productRepository.removeProductFromCart(productId, clientId)
 }
+
+export async function registerPurchase(products: [], clientId: number){
+    await productRepository.registerPurchase(products, clientId)
+}

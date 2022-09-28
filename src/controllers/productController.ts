@@ -45,3 +45,12 @@ export async function deleteProductFromCart(req: Request, res:Response){
     res.sendStatus(200)
     
 }
+
+export async function registerPurchase(req: Request, res:Response){
+    const products = req.body
+    const clientId = res.locals.userId
+
+    await productService.registerPurchase(products, clientId)
+
+    res.sendStatus(200)
+}

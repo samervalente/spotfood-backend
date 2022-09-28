@@ -1,6 +1,7 @@
 import prisma from "../database/prisma";
 import { ProductDataType } from "../types/productType";
 import connection from "../database/postgres";
+import { OrderProducts } from "@prisma/client";
 
 export async function registerProduct(product: ProductDataType){
     const {name, price, rate, imageUrl, typeId, restaurantId, description} = product
@@ -34,7 +35,7 @@ export async function addProductToCart(productId: number, amount:number, clientI
     const {rows: cart} = await connection.query(`SELECT * FROM carts WHERE "clientId" = $1`,[clientId])
     let cartId;
 
-    if(!cart){
+    if(cart.length === 0){
         await createCart(clientId)
         const {rows: existentCart} = await connection.query(`SELECT * FROM carts WHERE "clientId" = $1`,[clientId])
         cartId = existentCart[0].id
@@ -50,4 +51,21 @@ export async function removeProductFromCart(productId:number, clientId:number){
     const cart: any = await prisma.cart.findFirst({where:{id:clientId}})
 
     await connection.query(`DELETE FROM "cartProducts" WHERE "cartId" = $1 AND "productId" = $2`,[cart.id, productId])
+}
+
+
+
+export async function registerPurchase(products:any, clientId: number){
+   const {rows: result} =  await connection.query(`
+    INSERT INTO orders ("clientId") VALUES ($1) RETURNING id`,[clientId])
+
+    let orderId = result[0].id
+    console.log(orderId)
+   
+    let arrProducts = products.products 
+    
+    for(let i = 0; i < arrProducts.length; i ++){
+        const productId = arrProducts[i].productId
+        await connection.query(`INSERT INTO "orderProducts" ("orderId", "productId") VALUES ($1, $2)`,[orderId, productId])
+    }
 }
