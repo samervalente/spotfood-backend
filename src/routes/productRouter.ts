@@ -3,7 +3,7 @@ import schemaValidator from "../middlewares/schemaValidatorMiddleware";
 import tokenValidator from "../middlewares/tokenValidatorMiddleware";
 import productSchema from "../schemas/productSchema";
 import {validateRegisterProductData} from "../middlewares/productMiddleware";
-import {registerProduct, searchProduct, getProductsById, addProductToCart } from "../controllers/productController";
+import {registerProduct, searchProduct, getProductsById, addProductToCart,deleteProductFromCart} from "../controllers/productController";
 
 const routes = Router()
 
@@ -11,5 +11,5 @@ routes.post("/products",tokenValidator, schemaValidator(productSchema), validate
 routes.get("/products", tokenValidator, searchProduct)
 routes.get("/products/:id",tokenValidator, getProductsById)
 routes.post("/products/:id/cart",tokenValidator, addProductToCart)
-
+routes.delete("/products/:id/cart", tokenValidator, deleteProductFromCart)
 export default routes

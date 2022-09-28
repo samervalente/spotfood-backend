@@ -14,6 +14,7 @@ export async function registerProduct(req: Request, res:Response){
 export async function searchProduct(req: Request, res:Response){
     const productName = String(req.query.name)
 
+    console.log(productName)
     const products = await productService.searchProduct(productName)
     res.status(200).send(products)
 }
@@ -27,9 +28,20 @@ export async function getProductsById(req: Request, res:Response){
 
 export async function addProductToCart(req: Request, res:Response){
     const clientId = res.locals.userId
-    const {productId, amount} = req.body
+    const productId = Number(req.params.id)
+    const {amount} = req.body
 
     await productService.addProductToCart(productId, amount, clientId)
 
     res.status(201).send("Product added to cart successfully.")
+}
+
+export async function deleteProductFromCart(req: Request, res:Response){
+    const clientId = res.locals.userId
+    const productId = Number(req.params.id)
+
+    await productService.removeProductFromCart(productId, clientId)
+
+    res.sendStatus(200)
+    
 }

@@ -19,7 +19,7 @@ export async function insertClient(userData: ClientDataType){
 
 
 export async function getClientCart(clientId: number){
-    const {rows: clientCart} = await connection.query(`SELECT c.name as "clientName", carts."totalPrice", p.name, p.price FROM carts
+    const {rows: clientCart} = await connection.query(`SELECT c.name as "clientName", p.name, p."imageUrl", p.price, cp.amount FROM carts
     JOIN clients c
     ON c.id = carts."clientId"
     JOIN "cartProducts" cp
@@ -28,16 +28,22 @@ export async function getClientCart(clientId: number){
     ON p.id = cp."productId"
     WHERE carts."clientId" = $1`,[clientId])
 
-    const clientCartFormated = await formatCartOutput(clientCart)
-    return clientCartFormated
+    let formatedOutput: any = [];
+    if(clientCart.length > 0){
+        formatedOutput = await formatCartOutput(clientCart)
+    }
+
+    return formatedOutput
 
 }
 
 interface IProduct{
     clientName: string;
     totalPrice:number;
-    name:String;
+    name:string;
+    imageUrl:string;
     price:number;
+    amount:number;
 }
 
 async function formatCartOutput(cart: IProduct[]){
@@ -45,8 +51,10 @@ async function formatCartOutput(cart: IProduct[]){
     let totalPrice = 0;
 
     let cartProducts = cart.map(product => {
-        totalPrice += product.price
-        return {productName: product.name, price: product.price}
+        const totalProduct = product.price*product.amount
+        totalPrice += totalProduct
+        const {name, imageUrl, price, amount} = product
+        return {name, imageUrl, price, amount}
     } )
 
     const output = {clientName, totalPrice, cartProducts}

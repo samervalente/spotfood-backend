@@ -26,3 +26,7 @@ export async function getProductById(productId: number){
 export async function addProductToCart(productId: number, amount:number, clientId: number){
     await productRepository.addProductToCart(productId, amount, clientId)
 }
+
+export async function removeProductFromCart(productId: number, clientId: number){
+    await productRepository.removeProductFromCart(productId, clientId)
+}

@@ -16,12 +16,18 @@ export async function getProductType(typeId: number){
 }
 
 export async function getProductsByName(productName: string){
-    const {rows: products} = await connection.query(`SELECT * FROM products p WHERE p.name ILIKE $1`, [productName])
+    const {rows: products} = await connection.query(`SELECT * FROM products p WHERE p.name 
+    ILIKE '${productName}%'`)
     return products
 }
 
 export async function getProductById(productId: number){
    return await prisma.product.findFirst({where:{id:productId}})
+}
+
+
+export async function createCart(clientId: number){
+    await connection.query(`INSERT INTO carts ("clientId") VALUES ($1)`,[clientId])
 }
 
 export async function addProductToCart(productId: number, amount:number, clientId: number){
@@ -40,6 +46,8 @@ export async function addProductToCart(productId: number, amount:number, clientI
 }
 
 
-export async function createCart(clientId: number){
-    await connection.query(`INSERT INTO carts ("clientId") VALUES ($1)`,[clientId])
+export async function removeProductFromCart(productId:number, clientId:number){
+    const cart: any = await prisma.cart.findFirst({where:{id:clientId}})
+
+    await connection.query(`DELETE FROM "cartProducts" WHERE "cartId" = $1 AND "productId" = $2`,[cart.id, productId])
 }
