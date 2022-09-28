@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import * as clientRepository from "../repositories/clientRepository"
 import dotenv from "dotenv"
 import {ClientDataType} from "../types/clientType"
+import { notFoundError } from "../utils/errorUtils"
 
 dotenv.config()
 
@@ -25,8 +26,20 @@ export async function registerClient(clientData: ClientDataType){
 
 
 export async function loginClient(clientId: number){
-    const secret_key = String(process.env.SECRET_KEY)
-    const token = jwt.sign({id: clientId}, secret_key)
+    const secret_key = String(process.env.JWT_SECRET)
+    const token = jwt.sign({userId: clientId}, secret_key)
     
     return token
+}
+
+export async function getClientCart(clientId: number){
+    const client = await clientRepository.getClientById(clientId)
+
+    if(!client){
+        throw notFoundError("Client not found.")
+    }
+
+    const clientCart = await clientRepository.getClientCart(client.id)
+    return clientCart
+    
 }

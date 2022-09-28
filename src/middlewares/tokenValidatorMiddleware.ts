@@ -16,18 +16,21 @@ export default async function tokenValidator(req: Request, res: Response, next: 
     if (!token) throw {type:"unauthorized", message:"Missing token"}
   
     try {
+      
       const JWT_SECRET = String(process.env.JWT_SECRET);
       const { userId } = jwt.verify(token, JWT_SECRET) as { userId: number };
-   
+      console.log(userId)
       let user;
-
       const restaurant: any = await restaurantService.getRestaurantById(userId)
-      const client: any = await clientService.getClientById(userId)
+      
       
       if(!restaurant){
+        const client: any = await clientService.getClientById(userId)
         user = client
+      }else{
+        user = restaurant
       }
-      user = restaurant
+      
 
       res.locals.userId = user.id
       

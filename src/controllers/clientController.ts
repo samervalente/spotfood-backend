@@ -16,3 +16,12 @@ export async function loginClient(req: Request, res:Response){
 
     res.status(201).send(token)
 }
+
+export async function getClientCart(req: Request, res:Response){
+    const id = Number(req.params.id )
+
+    const clientCart = await clientService.getClientCart(id)
+    
+    res.status(200).send(clientCart)
+    
+}
