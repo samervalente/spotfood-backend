@@ -22,3 +22,7 @@ export async function getProductById(productId: number){
     const product = await productRepository.getProductById(productId)
     return product
 }
+
+export async function addProductToCart(productId: number, amount:number, clientId: number){
+    await productRepository.addProductToCart(productId, amount, clientId)
+}

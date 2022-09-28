@@ -92,8 +92,8 @@ model Product {
 }
 
 model Cart {
-  id         Int   @id @default(autoincrement())
-  clientId   Int
+  id       Int @id @default(autoincrement())
+  clientId Int
 
   clients Client @relation(fields: [clientId], references: [id])
 
@@ -107,7 +107,7 @@ model CartProducts {
   id        Int @id @default(autoincrement())
   cartId    Int
   productId Int
-  amount Int
+  amount    Int
 
   carts    Cart    @relation(fields: [cartId], references: [id])
   products Product @relation(fields: [productId], references: [id])

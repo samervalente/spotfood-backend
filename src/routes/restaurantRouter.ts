@@ -12,7 +12,6 @@ routes.post("/restaurants", schemaValidator(restaurantSchema), validateRestauran
 registerRestaurant)
 routes.post("/restaurants/login", schemaValidator(authSchema), validateRestaurantLoginData, loginRestaurant )
 
-
 routes.get("/restaurants",tokenValidator, listRestaurants)
 routes.get("/restaurants/:id",tokenValidator, getRestaurantById)
 routes.get("/restaurants/filter",tokenValidator, filterRestaurants)
