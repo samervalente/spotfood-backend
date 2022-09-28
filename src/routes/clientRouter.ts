@@ -8,7 +8,7 @@ import { registerClient, loginClient } from "../controllers/clientController";
 const routes = Router()
 
 routes.post("/clients", schemaValidator(clientSchema), validateClientRegisterData, registerClient )
-routes.post("/clientes/login", schemaValidator(authSchema), validateClientLoginData, loginClient )
+routes.post("/clients/login", schemaValidator(authSchema), validateClientLoginData, loginClient )
 routes.get("/clients/:id/cart")
 
 export default routes
