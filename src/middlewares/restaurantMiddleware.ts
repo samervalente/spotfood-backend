@@ -35,7 +35,7 @@ export async function validateRestaurantLoginData(req: Request, res:Response, ne
         throw unauthorizedError("Email or password incorrect.")
     }
 
-    console.log(restaurantOnDB)
+   
     res.locals.user = restaurantOnDB
 
     next()

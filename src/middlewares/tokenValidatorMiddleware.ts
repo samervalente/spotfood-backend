@@ -18,7 +18,7 @@ export default async function tokenValidator(req: Request, res: Response, next: 
     try {
       const JWT_SECRET = String(process.env.JWT_SECRET);
       const { userId } = jwt.verify(token, JWT_SECRET) as { userId: number };
-      console.log(userId)
+   
       let user;
 
       const restaurant: any = await restaurantService.getRestaurantById(userId)

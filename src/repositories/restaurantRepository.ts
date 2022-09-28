@@ -7,15 +7,13 @@ export async function insertRestaurant(userData: RestaurantDataType){
 }
 
 export async function getAllRestaurants(){
-    const restaurants = await prisma.restaurant.findMany({select:{name:true, city:true, states:{select:{name:true}}, Product:{select:{name:true, price:true, description:true}}}})
-
-    restaurants[0].Product.forEach(product => product.price = product.price/100)
+    const restaurants = await prisma.restaurant.findMany({select:{name:true, city:true, states:{select:{name:true}}}})
 
     return restaurants
 }
 
 export async function getRestaurantById(id: number){
-    const restaurant = await prisma.restaurant.findFirst({where: {id}})
+    const restaurant = await prisma.restaurant.findFirst({where: {id}, select:{name:true, Product:{select:{name:true, price:true, rate:true}}}})
     return restaurant
 }
 

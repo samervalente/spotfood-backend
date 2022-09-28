@@ -11,10 +11,10 @@ const routes = Router()
 routes.post("/restaurants", schemaValidator(restaurantSchema), validateRestaurantRegisterData, 
 registerRestaurant)
 
-routes.post("/login/restaurants", schemaValidator(authSchema), validateRestaurantLoginData, loginRestaurant )
+routes.post("/restaurants/login", schemaValidator(authSchema), validateRestaurantLoginData, loginRestaurant )
 
 routes.use(tokenValidator)
 routes.get("/restaurants", listRestaurants)
-//routes.get("/restaurants/:id", getRestaurantById)
+routes.get("/restaurants/:id", getRestaurantById)
 routes.get("/restaurants/filter", filterRestaurants)
 export default routes

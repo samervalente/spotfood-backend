@@ -8,3 +8,11 @@ export async function registerClient(req: Request, res:Response){
 
     res.status(201).send("Client created successfully.")
 }
+
+export async function loginClient(req: Request, res:Response){
+    const {id} = res.locals.client
+
+    const token = await clientService.loginClient(id)
+
+    res.status(201).send(token)
+}
