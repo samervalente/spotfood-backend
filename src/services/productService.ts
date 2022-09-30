@@ -32,5 +32,6 @@ export async function removeProductFromCart(productId: number, clientId: number)
 }
 
 export async function registerPurchase(products: [], clientId: number){
-    await productRepository.registerPurchase(products, clientId)
+    const orderId = await productRepository.registerPurchase(products, clientId)
+    return orderId
 }

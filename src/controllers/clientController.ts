@@ -12,9 +12,9 @@ export async function registerClient(req: Request, res:Response){
 export async function loginClient(req: Request, res:Response){
     const {id} = res.locals.client
 
-    const token = await clientService.loginClient(id)
+    const clientData = await clientService.loginClient(id)
 
-    res.status(201).send(token)
+    res.status(200).send(clientData)
 }
 
 export async function getClientCart(req: Request, res:Response){
@@ -24,4 +24,8 @@ export async function getClientCart(req: Request, res:Response){
     
     res.status(200).send(clientCart)
     
+}
+
+export async function checkToken(req: Request, res: Response) {
+    res.sendStatus(200);
 }

@@ -55,12 +55,14 @@ export async function removeProductFromCart(productId:number, clientId:number){
 
 
 
+
+
 export async function registerPurchase(products:any, clientId: number){
    const {rows: result} =  await connection.query(`
     INSERT INTO orders ("clientId") VALUES ($1) RETURNING id`,[clientId])
 
     let orderId = result[0].id
-    console.log(orderId)
+
    
     let arrProducts = products.products 
     
@@ -68,4 +70,7 @@ export async function registerPurchase(products:any, clientId: number){
         const productId = arrProducts[i].productId
         await connection.query(`INSERT INTO "orderProducts" ("orderId", "productId") VALUES ($1, $2)`,[orderId, productId])
     }
+
+    return orderId
+
 }

@@ -8,7 +8,7 @@ export async function validateClientRegisterData(req: Request, res:Response, nex
     const clientOnDB = await restaurantService.getClientByEmail(client.email)
 
     if(clientOnDB){
-        throw conflictError("Restaurant already registered with this email.")
+        throw conflictError("Client already registered with this email.")
     }
 
     next()

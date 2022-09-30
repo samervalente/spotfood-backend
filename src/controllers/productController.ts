@@ -50,7 +50,7 @@ export async function registerPurchase(req: Request, res:Response){
     const products = req.body
     const clientId = res.locals.userId
 
-    await productService.registerPurchase(products, clientId)
+    const orderId = await productService.registerPurchase(products, clientId)
 
-    res.sendStatus(200)
+    res.status(200).send({orderId})
 }

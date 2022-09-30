@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import * as clientRepository from "../repositories/clientRepository"
 import dotenv from "dotenv"
 import {ClientDataType} from "../types/clientType"
-import { notFoundError } from "../utils/errorUtils"
+import { notFoundError, unauthorizedError } from "../utils/errorUtils"
 
 dotenv.config()
 
@@ -28,8 +28,13 @@ export async function registerClient(clientData: ClientDataType){
 export async function loginClient(clientId: number){
     const secret_key = String(process.env.JWT_SECRET)
     const token = jwt.sign({userId: clientId}, secret_key)
+    const client = await clientRepository.getClientById(clientId)
     
-    return token
+    if(!client ){
+        throw unauthorizedError("Client not authorized.")
+    }
+    const {name, imageProfile} = client
+    return {name, imageProfile, token}
 }
 
 export async function getClientCart(clientId: number){
