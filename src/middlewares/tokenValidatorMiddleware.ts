@@ -17,10 +17,10 @@ export default async function tokenValidator(req: Request, res: Response, next: 
       
       const JWT_SECRET = String(process.env.JWT_SECRET);
       const { userId } = jwt.verify(token, JWT_SECRET) as { userId: number };
-  
+     
     
       res.locals.userId = userId
-      
+   
       next();
     } catch(err) {
       console.log(err)

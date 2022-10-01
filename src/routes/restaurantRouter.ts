@@ -13,6 +13,7 @@ registerRestaurant)
 routes.post("/restaurants/login", schemaValidator(authSchema), validateRestaurantLoginData, loginRestaurant )
 
 routes.get("/restaurants",tokenValidator, listRestaurants)
-routes.get("/restaurants/:id",tokenValidator, getRestaurantById)
 routes.get("/restaurants/filter",tokenValidator, filterRestaurants)
+routes.get("/restaurants/:id",tokenValidator, getRestaurantById)
+
 export default routes

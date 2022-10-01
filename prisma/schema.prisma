@@ -117,10 +117,11 @@ model CartProducts {
 }
 
 model Order {
-  id         Int   @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   clientId   Int
-
-  clients Client @relation(fields: [clientId], references: [id])
+  totalValue Float
+  orderCode  String
+  clients    Client @relation(fields: [clientId], references: [id])
 
   createdAt     DateTime        @default(now()) @db.Timestamptz(6)
   OrderProducts OrderProducts[]
@@ -132,6 +133,7 @@ model OrderProducts {
   id        Int @id @default(autoincrement())
   orderId   Int
   productId Int
+  amount    Int
 
   orders   Order   @relation(fields: [orderId], references: [id])
   products Product @relation(fields: [productId], references: [id])

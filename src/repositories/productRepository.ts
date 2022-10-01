@@ -1,7 +1,7 @@
 import prisma from "../database/prisma";
 import { ProductDataType } from "../types/productType";
 import connection from "../database/postgres";
-import { OrderProducts } from "@prisma/client";
+import {faker} from "@faker-js/faker"
 
 export async function registerProduct(product: ProductDataType){
     const {name, price, rate, imageUrl, typeId, restaurantId, description} = product
@@ -57,18 +57,18 @@ export async function removeProductFromCart(productId:number, clientId:number){
 
 
 
-export async function registerPurchase(products:any, clientId: number){
+export async function registerPurchase(order:any, clientId: number){
+    const orderCode = faker.random.alphaNumeric(5)
    const {rows: result} =  await connection.query(`
-    INSERT INTO orders ("clientId") VALUES ($1) RETURNING id`,[clientId])
+    INSERT INTO orders ("clientId", "totalValue","orderCode") VALUES ($1,$2,$3) RETURNING id`,[clientId, order.totalValue,orderCode])
 
     let orderId = result[0].id
 
-   
-    let arrProducts = products.products 
+    let arrProducts = order.products 
     
     for(let i = 0; i < arrProducts.length; i ++){
-        const productId = arrProducts[i].productId
-        await connection.query(`INSERT INTO "orderProducts" ("orderId", "productId") VALUES ($1, $2)`,[orderId, productId])
+        const {productId, amount} = arrProducts[i]
+        await connection.query(`INSERT INTO "orderProducts" ("orderId", "productId","amount") VALUES ($1, $2,$3)`,[orderId, productId, amount])
     }
 
     return orderId

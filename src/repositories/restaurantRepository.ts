@@ -19,8 +19,11 @@ export async function insertRestaurant(userData: RestaurantDataType){
 }
 
 export async function getAllRestaurants(){
-    const restaurants = await prisma.restaurant.findMany({select:{id:true, name:true, city:true, imageProfile:true, states:{select:{name:true}}}})
-
+    const {rows: restaurants} = await connection.query(`
+    SELECT r.id, r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
+    JOIN states s
+    ON s.id = r."stateId"
+    `)
     return restaurants
 }
 
@@ -83,7 +86,8 @@ export async function getRestauranteState(stateId: number){
 }
 
 export async function filterRestaurants(state: string, city: string){
-    const {rows: restaurants} = await connection.query(`SELECT r.name, r.city, s.name FROM restaurants r
+    const {rows: restaurants} = await connection.query(`
+    SELECT r.id,r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
     JOIN states s
     ON s.id = r."stateId"
     WHERE s.name = $1 AND r.city = $2

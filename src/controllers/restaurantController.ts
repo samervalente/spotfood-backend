@@ -35,7 +35,7 @@ export async function getRestaurantById(req: Request, res:Response){
 export async function filterRestaurants(req: Request, res:Response){
     const state = String(req.query.state)
     const city = String(req.query.city)
-
+  
     const restaurants = await restaurantService.filterRestaurants(state, city)
     
     res.status(200).send(restaurants)
