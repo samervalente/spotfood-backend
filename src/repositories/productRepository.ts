@@ -49,7 +49,7 @@ export async function addProductToCart(productId: number, amount:number, clientI
 
 export async function removeProductFromCart(productId:number, clientId:number){
     const cart: any = await prisma.cart.findFirst({where:{clientId}})
-    console.log(cart)
+   
     await connection.query(`DELETE FROM "cartProducts" WHERE "cartId" = $1 AND "productId" = $2`,[cart.id, productId])
 }
 

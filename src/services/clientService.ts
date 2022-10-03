@@ -48,3 +48,9 @@ export async function getClientCart(clientId: number){
     return clientCart
     
 }
+
+export async function getClientOrders(clientId: number){
+    const orders = await clientRepository.getClientOrders(clientId)
+    return orders
+
+}

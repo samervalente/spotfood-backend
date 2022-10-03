@@ -20,7 +20,7 @@ export async function insertClient(userData: ClientDataType){
 
 export async function getClientCart(clientId: number){
     const {rows: clientCart} = await connection.query(`
-    SELECT c.id as "clientId", c.name as "clientName", p.id as "productId", p.name, p."imageUrl", p.price, cp.amount FROM carts
+    SELECT carts.id as "cartId", c.id as "clientId", c.name as "clientName", p.id as "productId", p.name, p."imageUrl", p.price, cp.amount FROM carts
     JOIN clients c
     ON c.id = carts."clientId"
     JOIN "cartProducts" cp
@@ -39,6 +39,7 @@ export async function getClientCart(clientId: number){
 }
 
 interface IProduct{
+    cartId:number;
     clientId:number;
     clientName: string;
     totalPrice:number;
@@ -50,7 +51,7 @@ interface IProduct{
 }
 
 async function formatCartOutput(cart: IProduct[]){
-    const {clientId, clientName} = cart[0]
+    const {clientId, clientName, cartId} = cart[0]
     let totalPrice = 0;
 
     let cartProducts = cart.map(product => {
@@ -60,7 +61,28 @@ async function formatCartOutput(cart: IProduct[]){
         return {name, imageUrl, price, amount, productId}
     } )
 
-    const output = {clientId, clientName, totalPrice, cartProducts}
+    const output = {cartId, clientId, clientName, totalPrice, cartProducts}
     return output
+}
+
+
+export async function getClientOrders(clientId: number){
+
+    const {rows: orders} = await connection.query(`
+    SELECT o."orderCode" as order, o."totalValue", TO_CHAR(NOW() :: DATE, 'dd-mm-yyyy') as date, JSON_AGG(JSON_BUILD_OBJECT('name', p.name, 'imageUrl', p."imageUrl", 'amount', op.amount, 'restaurantName', r.name, 'restaurantCity', r.city )) as products
+    FROM orders o
+    JOIN "orderProducts" op
+    ON o.id = op."orderId"
+    JOIN products p 
+    ON p.id = op."productId"
+    JOIN restaurants r
+    ON r.id = p."restaurantId"
+	WHERE o."clientId" = $1
+    GROUP BY "orderCode", "totalValue", "date"
+	ORDER BY date DESC
+    `,[clientId])
+
+    return orders
+
 
 }

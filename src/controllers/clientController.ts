@@ -26,6 +26,14 @@ export async function getClientCart(req: Request, res:Response){
     
 }
 
+export async function getClientOrders(req: Request, res:Response){
+    const clientId: number = res.locals.userId
+    const orders = await clientService.getClientOrders(clientId)
+
+    return res.status(200).send(orders)
+}
+
 export async function checkToken(req: Request, res: Response) {
     res.sendStatus(200);
 }
+
