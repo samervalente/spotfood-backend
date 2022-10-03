@@ -69,7 +69,7 @@ async function formatCartOutput(cart: IProduct[]){
 export async function getClientOrders(clientId: number){
 
     const {rows: orders} = await connection.query(`
-    SELECT o."orderCode" as order, o."totalValue", TO_CHAR(NOW() :: DATE, 'dd-mm-yyyy') as date, JSON_AGG(JSON_BUILD_OBJECT('name', p.name, 'imageUrl', p."imageUrl", 'amount', op.amount, 'restaurantName', r.name, 'restaurantCity', r.city )) as products
+    SELECT o."orderCode" as order, o."totalValue", TO_CHAR(NOW() :: DATE, 'dd-mm-yyyy') as date, JSON_AGG(JSON_BUILD_OBJECT('name', p.name, 'imageUrl', p."imageUrl", 'amount', op.amount, 'rate', p.rate )) as products
     FROM orders o
     JOIN "orderProducts" op
     ON o.id = op."orderId"
@@ -77,9 +77,11 @@ export async function getClientOrders(clientId: number){
     ON p.id = op."productId"
     JOIN restaurants r
     ON r.id = p."restaurantId"
-	WHERE o."clientId" = $1
-    GROUP BY "orderCode", "totalValue", "date"
-	ORDER BY date DESC
+    WHERE o."clientId" = $1
+    GROUP BY "orderCode", o."totalValue", o."createdAt"
+	ORDER BY o."createdAt" DESC
+	
+	
     `,[clientId])
 
     return orders

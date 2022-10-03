@@ -58,7 +58,7 @@ export async function removeProductFromCart(productId:number, clientId:number){
 
 
 export async function registerPurchase(order:any, clientId: number){
-    const orderCode = faker.random.alphaNumeric(5)
+    const orderCode = faker.random.numeric(6)
    const {rows: result} =  await connection.query(`
     INSERT INTO orders ("clientId", "totalValue","orderCode") VALUES ($1,$2,$3) RETURNING id`,[clientId, order.totalValue,orderCode])
 
