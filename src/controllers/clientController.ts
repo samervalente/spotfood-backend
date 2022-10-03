@@ -18,9 +18,9 @@ export async function loginClient(req: Request, res:Response){
 }
 
 export async function getClientCart(req: Request, res:Response){
-    const id = Number(req.params.id )
+    const clientId: number = res.locals.userId
 
-    const clientCart = await clientService.getClientCart(id)
+    const clientCart = await clientService.getClientCart(clientId)
     
     res.status(200).send(clientCart)
     

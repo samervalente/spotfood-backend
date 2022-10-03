@@ -27,7 +27,8 @@ export async function listRestaurants(req: Request, res:Response){
 
 export async function getRestaurantById(req: Request, res:Response){
     const restaurantId = Number(req.params.id)
-    const restaurant = await restaurantService.getRestaurantById(restaurantId)
+    const clientId = res.locals.userId
+    const restaurant = await restaurantService.getRestaurantById(clientId,restaurantId)
 
     res.status(200).send(restaurant)
 }

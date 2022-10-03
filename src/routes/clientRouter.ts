@@ -11,6 +11,6 @@ const routes = Router()
 routes.post("/clients", schemaValidator(clientSchema), validateClientRegisterData, registerClient )
 routes.post("/clients/login", schemaValidator(authSchema), validateClientLoginData, loginClient )
 
-routes.get("/clients/:id/cart", tokenValidator, getClientCart)
+routes.get("/clients/carts", tokenValidator, getClientCart)
 routes.post('/auth/validate', tokenValidator, checkToken);
 export default routes

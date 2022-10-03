@@ -19,7 +19,8 @@ export async function insertClient(userData: ClientDataType){
 
 
 export async function getClientCart(clientId: number){
-    const {rows: clientCart} = await connection.query(`SELECT c.name as "clientName", p.name, p."imageUrl", p.price, cp.amount FROM carts
+    const {rows: clientCart} = await connection.query(`
+    SELECT c.id as "clientId", c.name as "clientName", p.id as "productId", p.name, p."imageUrl", p.price, cp.amount FROM carts
     JOIN clients c
     ON c.id = carts."clientId"
     JOIN "cartProducts" cp
@@ -38,26 +39,28 @@ export async function getClientCart(clientId: number){
 }
 
 interface IProduct{
+    clientId:number;
     clientName: string;
     totalPrice:number;
     name:string;
     imageUrl:string;
     price:number;
     amount:number;
+    productId:number;
 }
 
 async function formatCartOutput(cart: IProduct[]){
-    const clientName = cart[0].clientName
+    const {clientId, clientName} = cart[0]
     let totalPrice = 0;
 
     let cartProducts = cart.map(product => {
         const totalProduct = product.price*product.amount
         totalPrice += totalProduct
-        const {name, imageUrl, price, amount} = product
-        return {name, imageUrl, price, amount}
+        const {name, imageUrl, price, amount, productId} = product
+        return {name, imageUrl, price, amount, productId}
     } )
 
-    const output = {clientName, totalPrice, cartProducts}
+    const output = {clientId, clientName, totalPrice, cartProducts}
     return output
 
 }

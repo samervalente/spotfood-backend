@@ -1,8 +1,7 @@
 import prisma from "../database/prisma"
 import connection from "../database/postgres"
 import {RestaurantDataType} from "../types/restaurantType"
-import { resourceUsage } from "process";
-
+import * as clientRepository from "./clientRepository"
 
 interface IProduct{
     restaurantName:string;
@@ -27,7 +26,9 @@ export async function getAllRestaurants(){
     return restaurants
 }
 
-export async function getRestaurantById(id: number){
+export async function getRestaurantById(clientId: number, id: number){
+
+    
     const {rows: restaurant} = await connection.query(`SELECT r.name as "restaurantName", r.city, r."imageProfile", p.name as "productName", p.price, p.rate, p."imageUrl", p.description, pt.type as category, p.id as "productId" FROM products p
     JOIN "productTypes" pt
     ON p."typeId" = pt.id
@@ -36,38 +37,63 @@ export async function getRestaurantById(id: number){
     WHERE p."restaurantId" = $1`,[id])
 
     if(restaurant.length > 0){
-        const formatedOutput = await formatOutput(restaurant)
+       
+        const cart = await clientRepository.getClientCart(clientId)
+       
+        const formatedOutput = await formatOutput(cart, restaurant, clientId)
         return formatedOutput
     }
     return restaurant
 }
 
 
-async function formatOutput(restaurant: any){
+async function formatOutput(cart: any, restaurant: any, clientId:number){
+   
+ 
     const {restaurantName, city, imageProfile} = restaurant[0]
-    let products = []
+    let productsCategorie: any = []
     const categories: any = ["Pratos Feitos, Sobremesas, Churrascos, Mariscos, Sushis, Bebidas, Pizzas, Hambúrgueres"]
     
     for(let i = 0; i < restaurant.length; i ++){
         if(!categories.includes(restaurant[i].category)){
             const category = restaurant[i].category
             categories.push(category)
-            products.push({category, products:[]})
+            productsCategorie.push({category, products:[]})
         }
     }
+  
 
- 
     for(let i = 0; i < restaurant.length; i ++){
-        for(let j = 0; j < products.length;  j++){
-            if(restaurant[i].category === products[j].category){
-              products[j] = {...products[j], products:[...products[j].products, restaurant[i]]}
-               
+        for(let j = 0; j < productsCategorie.length;  j++){
+            const category = productsCategorie[j].category
+            if(restaurant[i].category === category){
+                const {productName, price, rate, imageUrl, description, productId} = restaurant[i]
+                let product: any = {productName, price, rate, imageUrl, description, productId}
+               if(cart.cartProducts && cart.cartProducts.length > 0){
+                let hash:any = {}
+                for(let k = 0 ; k < cart.cartProducts.length; k ++){
+                    const {productId} = cart.cartProducts[k]
+                    hash[productId] = productId
+                }
+
+                if(hash[productId] && clientId === cart.clientId){
+                    product = {...product, inCart:true}
+                    productsCategorie[j].products.push(product)
+                }else{
+                    product = {...product, inCart:false}
+                    productsCategorie[j].products.push(product)
+                }
+               }else{
+                product = {...product, inCart:false}
+                productsCategorie[j].products.push(product)
             }
+            }
+            
         }
     }
    
-
-    return {restaurantName, city, imageProfile, products}
+   
+    return {clientId, restaurantName, city, imageProfile, productsCategorie}
 }
 
 export async function getRestaurantByEmail(email: string){

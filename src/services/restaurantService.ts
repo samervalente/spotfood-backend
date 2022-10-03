@@ -44,8 +44,8 @@ export async function getAllRestaurants(){
     return restaurants
 }
 
-export async function getRestaurantById(restaurantId: number){
-    const restaurant = await restaurantRepository.getRestaurantById(restaurantId)
+export async function getRestaurantById(clientId:number, restaurantId: number){
+    const restaurant = await restaurantRepository.getRestaurantById(clientId, restaurantId)
 
     if(!restaurant){
         throw notFoundError("Restaurant not found.")
