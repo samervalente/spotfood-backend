@@ -14,7 +14,7 @@ export async function loginRestaurant(req: Request, res:Response){
    const user = res.locals.user
 
     const token = await restaurantService.loginRestaurant(user.id)
-    res.status(200).send(token)
+    res.status(200).send({sessionToken:token})
 }
 
 export async function listRestaurants(req: Request, res:Response){

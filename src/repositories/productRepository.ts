@@ -12,6 +12,8 @@ export async function registerProduct(product: ProductDataType){
 
 }
 
+
+
 export async function getProductType(typeId: number){
    return await prisma.productType.findFirst({where:{id:typeId}})
 }
@@ -52,9 +54,6 @@ export async function removeProductFromCart(productId:number, clientId:number){
    
     await connection.query(`DELETE FROM "cartProducts" WHERE "cartId" = $1 AND "productId" = $2`,[cart.id, productId])
 }
-
-
-
 
 
 export async function registerPurchase(order:any, clientId: number){

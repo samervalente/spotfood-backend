@@ -6,7 +6,12 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "test:integration:clients":"dotenv -e .env.test jest --detectOpenHandles clients.test.ts  --no-cache",
+    "test:integration:products":"dotenv -e .env.test jest products.test.ts  --no-cache",
+    "test:integration:restaurants":"dotenv -e .env.test jest restaurants.test.ts  --no-cache",
     "dev": "nodemon src/server.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
