@@ -23,7 +23,6 @@ export default async function tokenValidator(req: Request, res: Response, next: 
    
       next();
     } catch(err) {
-      console.log(err)
       throw {type:"unauthorized", message:"Invalid Token"}
     }
 }
