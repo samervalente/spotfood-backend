@@ -14,7 +14,7 @@ interface IProduct{
 
 
 export async function insertRestaurant(userData: RestaurantDataType){
-    return await prisma.restaurant.create({data: userData})
+     await prisma.restaurant.create({data: userData})
 }
 
 export async function getAllRestaurants(){
@@ -107,7 +107,7 @@ export async function getRestaurantByName(name:string){
 }
 
 export async function getRestauranteState(stateId: number){
-    const state = await prisma.state.findFirst({where:{id:stateId}})
+    const state = await prisma.state.findFirst({where:{id:stateId}, select:{id:true, name:true}})
     return state
 }
 

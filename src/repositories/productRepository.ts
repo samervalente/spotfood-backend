@@ -70,6 +70,5 @@ export async function registerPurchase(order:any, clientId: number){
         await connection.query(`INSERT INTO "orderProducts" ("orderId", "productId","amount") VALUES ($1, $2,$3)`,[orderId, productId, amount])
     }
 
-    return orderId
 
 }

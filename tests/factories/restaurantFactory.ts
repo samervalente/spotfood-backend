@@ -1,6 +1,20 @@
 import { faker } from "@faker-js/faker";
 import prisma from "../../src/database/prisma";
 
+export async function createRestaurantData(){
+    const restaurantDataType = {
+        name:faker.company.name(),
+        email:faker.internet.email(),
+        imageProfile:faker.internet.avatar(),
+        password:faker.internet.password(),
+        city:"Ananindeua",
+        stateId:1
+    }
+
+    return restaurantDataType
+}
+
+
 export async function restaurantFactory(){
     const restaurantDataType = {
         name:faker.company.name(),

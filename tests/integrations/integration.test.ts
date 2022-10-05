@@ -6,7 +6,7 @@ import { faker } from "@faker-js/faker";
 import clientFactory from "../factories/clientFactory";
 import { populateDatabaseWithRestaurants } from "../factories/restaurantFactory";
 import {resetDatabase, populateDatabaseWithStates} from "../factories/DatabaseUtils"
-import {clientTokenFactory, restaurantTokenFactory} from "../factories/tokenFactory";
+import {clientTokenFactory} from "../factories/tokenFactory";
 import {productFactory, populateDatabaseWithProducts } from "../factories/productFatory";
 import typeFactory from "../factories/typeFactory"
 
@@ -125,15 +125,6 @@ describe("Testes para a rota de criação de produtos", () => {
         await resetDatabase()
         await populateDatabaseWithStates()
      })
-    it("Retorna 201 caso os dados de criação sejam válidos", async () => {
-        const token = await restaurantTokenFactory()
-        const type: any = await typeFactory()
-        const product = await productFactory(type.id)
-
-        const {status} = await agent.post("/products").set({authorization:token}).send(product)
-        
-        expect(status).toBe(201)
-    })
 
     it("Retorna 401 quando o token do restaurante é inválido", async () => {
         const token = "invalidToken"
@@ -144,29 +135,6 @@ describe("Testes para a rota de criação de produtos", () => {
         
         expect(status).toBe(401)
     })
-
-    it("Retorna 404 quando a categoria do produto não existe", async () => {
-        const token = await restaurantTokenFactory()
-        const typeId = 3
-        const product = await productFactory(typeId)
-
-        const {status} = await agent.post("/products").set({authorization:token}).send(product)
-        
-        expect(status).toBe(404)
-
-    })
-
-    it("Retorna 422 quando o body  é inválido", async () => {
-        const token = await restaurantTokenFactory()
-        const type: any = await typeFactory()
-        let product:any = await productFactory(type.id)
-        product = {...product, name: 2, price:"invalidPrice"}
-
-        const {status} = await agent.post("/products").set({authorization:token}).send(product)
-        
-        expect(status).toBe(422)
-    })
-
    
 })
 

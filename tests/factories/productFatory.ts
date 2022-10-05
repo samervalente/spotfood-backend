@@ -6,6 +6,7 @@ export  async function productFactory(typeId: number){
         name:faker.commerce.productName(),
         price:10,
         imageUrl:faker.internet.avatar(),
+        rate:3,
         typeId:typeId,
         description:faker.lorem.words(3)
     }

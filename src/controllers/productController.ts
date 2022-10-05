@@ -11,13 +11,6 @@ export async function registerProduct(req: Request, res:Response){
 
 }
 
-export async function searchProduct(req: Request, res:Response){
-    const productName = String(req.query.name)
-
-    console.log(productName)
-    const products = await productService.searchProduct(productName)
-    res.status(200).send(products)
-}
 
 export async function getProductsById(req: Request, res:Response){
     const id = Number(req.params.id)
@@ -50,7 +43,7 @@ export async function registerPurchase(req: Request, res:Response){
     const products = req.body
     const clientId = res.locals.userId
 
-    const orderId = await productService.registerPurchase(products, clientId)
+    await productService.registerPurchase(products, clientId)
 
-    res.status(200).send({orderId})
+    res.sendStatus(200)
 }

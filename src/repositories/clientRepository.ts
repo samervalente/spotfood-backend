@@ -3,7 +3,8 @@ import connection from "../database/postgres"
 import {ClientDataType} from "../types/clientType"
 
 export async function getClientById(id: number){
-    const client = await prisma.client.findFirst({where: {id}})
+    const client = await prisma.client.findFirst({where: {id}, select:{id:true, name:true, imageProfile:true, email:true, password:true}})
+   
     return client
 }
 
