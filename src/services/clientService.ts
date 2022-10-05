@@ -21,7 +21,7 @@ export async function registerClient(clientData: ClientDataType){
     const {password} = clientData
     clientData.password = bcrypt.hashSync(password, 10)
     
-    return await clientRepository.insertClient(clientData)
+    await clientRepository.insertClient(clientData)
 }
 
 
@@ -41,7 +41,7 @@ export async function getClientCart(clientId: number){
     const client = await clientRepository.getClientById(clientId)
 
     if(!client){
-        throw notFoundError("Client not found.")
+        throw notFoundError("Client not found")
     }
 
     const clientCart = await clientRepository.getClientCart(client.id)

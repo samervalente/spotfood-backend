@@ -14,7 +14,7 @@ export async function getClientByEmail(email: string){
 
 
 export async function insertClient(userData: ClientDataType){
-    return await prisma.client.create({data: userData})
+     await prisma.client.create({data: userData})
 }
 
 

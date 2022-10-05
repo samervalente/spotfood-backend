@@ -31,6 +31,7 @@ export async function loginRestaurant(restaurantId: number){
 
 export async function getRestaurantByEmail(email: string){
     const restaurant = await restaurantRepository.getRestaurantByEmail(email)
+
     return restaurant
 }
 

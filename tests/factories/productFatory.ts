@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
+import prisma from "../../src/database/prisma";
 
-
-export default async function productFactory(typeId: number){
+export  async function productFactory(typeId: number){
     const product = {
         name:faker.commerce.productName(),
         price:10,
@@ -11,5 +11,23 @@ export default async function productFactory(typeId: number){
     }
 
     return product
+}
+
+export async function populateDatabaseWithProducts(typeId: number, amount: number){
+
+    for(let i = 0; i < amount ;  i ++){
+        const product = {
+            name:faker.commerce.productName(),
+            price:10,
+            imageUrl:faker.internet.avatar(),
+            typeId:typeId,
+            restaurantId:1,
+            description:faker.lorem.words(3)
+        }
+        await prisma.product.create({data: product})
+    }
+
+    const products = await prisma.product.findMany()
+    return products
 }
 
