@@ -3,8 +3,11 @@ import * as clientService from "../services/clientService"
 
 export async function registerClient(req: Request, res:Response){
     const restaurantRegisterData = req.body
-
+    res.setHeader("Access-Control-Allow-Origin","*")
+    
     await clientService.registerClient(restaurantRegisterData)
+    
+    
 
     res.status(201).send("Client created successfully.")
 }
