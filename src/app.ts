@@ -7,7 +7,6 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware"
 const app = express()
 const corsOptions = {
     origin: "*",
-    
     allowedHeaders: ["Content-Type, Authorization"]
 }
 
