@@ -32,16 +32,21 @@ export async function getAllRestaurants(){
     return restaurants
 }
 
-export async function getRestaurantById(clientId:number, restaurantId: number){
-    const restaurant = await restaurantRepository.getRestaurantById(clientId, restaurantId)
+export async function getRestaurantProducts(clientId:number, restaurantId: number){
+    const restaurant = await restaurantRepository.getRestaurantProducts(clientId, restaurantId)
+
+    return restaurant
+}
+
+export async function getRestaurantById(restaurantId: number){
+    const restaurant = await restaurantRepository.getRestaurantById(restaurantId)
 
     if(!restaurant){
         throw notFoundError("Restaurant not found.")
     }
-    
+
     return restaurant
 }
-
 
 export async function filterRestaurants(state: string, city: string){
     const restaurants = await restaurantRepository.filterRestaurants(state, city)

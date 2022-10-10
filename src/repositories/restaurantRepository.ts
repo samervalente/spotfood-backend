@@ -26,10 +26,8 @@ export async function getAllRestaurants(){
     return restaurants
 }
 
-export async function getRestaurantById(clientId: number, id: number){
-
-    
-    const {rows: restaurant} = await connection.query(`SELECT r.name as "restaurantName", r.city, r."imageProfile", p.name as "productName", p.price, p.rate, p."imageUrl", p.description, pt.type as category, p.id as "productId" FROM products p
+export async function getRestaurantProducts(clientId: number, id: number){
+    const {rows: restaurant} = await connection.query(`SELECT p.name as "productName", p.price, p.rate, p."imageUrl", p.description, pt.type as category, p.id as "productId" FROM products p
     JOIN "productTypes" pt
     ON p."typeId" = pt.id
     JOIN restaurants r
@@ -47,9 +45,18 @@ export async function getRestaurantById(clientId: number, id: number){
 }
 
 
+export async function getRestaurantById(restaurantId: number){
+    const {rows: restaurant} = await connection.query(`
+    SELECT r.name, r."imageProfile", s.name as state, r.city FROM restaurants r
+    JOIN states s
+    ON s.id = r."stateId"
+    WHERE r.id  = $1
+    `,[restaurantId])
+
+    return restaurant
+}
+
 async function formatOutput(cart: any, restaurant: any, clientId:number){
-   
- 
     const {restaurantName, city, imageProfile} = restaurant[0]
     let productsCategorie: any = []
     const categories: any = ["Pratos Feitos, Sobremesas, Churrascos, Mariscos, Sushis, Bebidas, Pizzas, Hambúrgueres"]
@@ -113,7 +120,7 @@ export async function getRestauranteState(stateId: number){
 
 export async function filterRestaurants(state: string, city: string){
     const {rows: restaurants} = await connection.query(`
-    SELECT r.id,r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
+    SELECT r.id, r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
     JOIN states s
     ON s.id = r."stateId"
     WHERE s.name = $1 AND r.city = $2

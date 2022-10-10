@@ -147,7 +147,7 @@ describe("Testes para o restaurantService", () => {
         const restaurant: RestaurantDataType | any = await createRestaurantData()
 
         jest.spyOn(restaurantRepository,'getRestaurantByEmail').mockResolvedValue(restaurant)
-        jest.spyOn(restaurantRepository, "getRestauranteState").mockResolvedValueOnce({id:1, name:"Acre"})
+        jest.spyOn(restaurantRepository, "getRestauranteState").mockResolvedValueOnce(null)
         jest.spyOn(restaurantRepository, 'insertRestaurant').mockResolvedValueOnce()
 
         const result =  restaurantService.registerRestaurant(restaurant)
@@ -159,7 +159,7 @@ describe("Testes para o restaurantService", () => {
     it("Chama a função notFoundError quando o estado do restaurante não existe", async () => {
         const restaurant: RestaurantDataType | any = await createRestaurantData()
 
-        jest.spyOn(restaurantRepository, "getRestauranteState").mockResolvedValue(null)
+        jest.spyOn(restaurantRepository, "getRestauranteState").mockResolvedValueOnce(null)
         
        const result = restaurantService.registerRestaurant(restaurant)
        const typeError = { type: "not_found", message: "State not found"};
@@ -181,6 +181,33 @@ describe("Testes para o restaurantService", () => {
         expect(allRestaurants).toBeInstanceOf(Array)
     })
 
+    it("Retorna todos os produtos do restaurante", async () => {
+        const restaurantProducts = {restaurantId:2, name:"Churrasco do Pedrão", products:[
+            {
+            name:"Churrasco de carne",
+            price:10,
+            description:"Um belo espetinho de churrasquinho de carne",
+            rate:5
+            },
+            {
+            name:"Churrasco de calabresa com carne",
+            price:12,
+            description:"Um belo espetinho de churrasquinho de calabresa com carne",
+            rate:5
+            }
+        ] 
+      }
+
+        jest.spyOn(restaurantRepository, 'getRestaurantProducts').mockImplementationOnce(():any => {
+            return restaurantProducts
+        })
+
+        const restaurantProductsOnDB: any = await restaurantService.getRestaurantProducts(1, 2)
+        expect(restaurantRepository.getRestaurantProducts).toBeCalled()
+        expect(restaurantProductsOnDB.products.length).toEqual(2)
+    
+    })
+
     it("Retorna um restaurante pelo id", async () => {
         const restaurant = {id: 1, name:"Tacacá da Helem", state:"Pará", city:"Ananindeua"}
         
@@ -188,7 +215,7 @@ describe("Testes para o restaurantService", () => {
             return restaurant
         })
 
-        const restaurantOnDB = await restaurantService.getRestaurantById(1, restaurant.id)
+        const restaurantOnDB = await restaurantService.getRestaurantById(restaurant.id)
 
         expect(restaurantRepository.getRestaurantById).toBeCalled()
         expect(restaurantOnDB).toBeInstanceOf(Object)
@@ -200,7 +227,7 @@ describe("Testes para o restaurantService", () => {
             return null
         })
 
-        const result = restaurantService.getRestaurantById(1, 99)
+        const result = restaurantService.getRestaurantById(99)
         const typeError = { type: "not_found", message:"Restaurant not found." };
         expect(result).rejects.toEqual(typeError)
      })

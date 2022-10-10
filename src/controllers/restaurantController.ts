@@ -16,18 +16,25 @@ export async function listRestaurants(req: Request, res:Response){
 }
 
 
-export async function getRestaurantById(req: Request, res:Response){
+export async function getRestaurantProducts(req: Request, res:Response){
     const restaurantId = Number(req.params.id)
     const clientId = res.locals.userId
-    const restaurant = await restaurantService.getRestaurantById(clientId,restaurantId)
+    const restaurant = await restaurantService.getRestaurantProducts(clientId,restaurantId)
 
+    res.status(200).send(restaurant)
+}
+
+export async function getRestaurantById(req: Request, res:Response){
+    const restaurantId = Number(req.params.id)
+
+    const restaurant = await restaurantService.getRestaurantById(restaurantId)
     res.status(200).send(restaurant)
 }
 
 export async function filterRestaurants(req: Request, res:Response){
     const state = String(req.query.state)
     const city = String(req.query.city)
-  
+    
     const restaurants = await restaurantService.filterRestaurants(state, city)
     
     res.status(200).send(restaurants)
