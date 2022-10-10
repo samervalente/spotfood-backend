@@ -3,15 +3,6 @@ import connection from "../database/postgres"
 import {RestaurantDataType} from "../types/restaurantType"
 import * as clientRepository from "./clientRepository"
 
-interface IProduct{
-    restaurantName:string;
-    city:string;
-    productName:string;
-    price:number;
-    rate:number;
-    category:number;
-}
-
 
 export async function insertRestaurant(userData: RestaurantDataType){
      await prisma.restaurant.create({data: userData})

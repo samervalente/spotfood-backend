@@ -5,13 +5,7 @@ import routes from "./routes/index"
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware"
 
 const app = express()
-const corsOptions = {
-    origin: "*",
-    allowedHeaders: ["Content-Type, Authorization"]
-}
-
-app.options("*",cors())
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 
 app.use(routes)
