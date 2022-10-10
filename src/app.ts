@@ -6,9 +6,11 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware"
 
 const app = express()
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://spotfood-frontend.vercel.app/"],
-    allowedHeaders: "Access-Control-Allow-Origin"
+    origin: "*",
+    
+    allowedHeaders: ["Content-Type, Authorization"]
 }
+
 app.options("*",cors())
 app.use(cors(corsOptions))
 app.use(express.json())
