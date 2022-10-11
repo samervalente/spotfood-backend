@@ -7,6 +7,7 @@ const productSchema = joi.object({
     imageUrl: joi.string().required(),
     typeId: joi.number().required(),
     rate:joi.number(),
+    restaurantId:joi.number().required(),
     description:joi.string()
 })
 

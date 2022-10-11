@@ -6,7 +6,7 @@ import {registerProduct, getProductsById, addProductToCart,deleteProductFromCart
 
 const routes = Router()
 
-routes.post("/products",tokenValidator, schemaValidator(productSchema), registerProduct)
+routes.post("/products", schemaValidator(productSchema), registerProduct)
 routes.get("/products/:id",tokenValidator, getProductsById)
 routes.post("/products/:id/cart",tokenValidator, addProductToCart)
 routes.delete("/products/:id/cart", tokenValidator, deleteProductFromCart)

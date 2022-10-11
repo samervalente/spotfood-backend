@@ -3,9 +3,7 @@ import * as productService from "../services/productService"
 
 export async function registerProduct(req: Request, res:Response){
     let product = req.body
-    const restaurantId = res.locals.userId
-    product = {...product, restaurantId}
-  
+
     await productService.registerProduct(product)
     res.status(201).send("Product created successfully.")
 
