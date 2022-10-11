@@ -13,7 +13,7 @@ export async function getAllRestaurants(){
     SELECT r.id, r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
     JOIN states s
     ON s.id = r."stateId"
-    ORDER BY "createdAt" DESC
+    ORDER BY r."createdAt" DESC
     `)
     return restaurants
 }
