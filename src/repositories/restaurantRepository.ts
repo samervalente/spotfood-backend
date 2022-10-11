@@ -13,6 +13,7 @@ export async function getAllRestaurants(){
     SELECT r.id, r.name, r."imageProfile", r.city, s.name as state FROM restaurants r
     JOIN states s
     ON s.id = r."stateId"
+    ORDER BY "createdAt" DESC
     `)
     return restaurants
 }
@@ -23,7 +24,9 @@ export async function getRestaurantProducts(clientId: number, id: number){
     ON p."typeId" = pt.id
     JOIN restaurants r
     ON p."restaurantId" = r.id
-    WHERE p."restaurantId" = $1`,[id])
+    WHERE p."restaurantId" = $1
+    
+    `,[id])
 
     if(restaurant.length > 0){
        
